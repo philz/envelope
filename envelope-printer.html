@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Envelope Printer - #10 Envelopes</title>
+    <style>
+        /* Screen styles */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .input-section {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .print-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            transition: background-color 0.3s;
+        }
+        
+        .print-button:hover {
+            background-color: #45a049;
+        }
+        
+        .preview {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            background-color: #fafafa;
+        }
+        
+        .preview h3 {
+            margin-top: 0;
+            color: #666;
+        }
+        
+        /* Print styles for #10 envelope */
+        @media print {
+            body {
+                margin: 0;
+                padding: 0;
+                background: white;
+                font-family: Arial, sans-serif;
+            }
+            
+            .container, .input-section, .print-button, .preview, h1 {
+                display: none;
+            }
+            
+            .envelope {
+                display: block !important;
+                width: 9.5in;
+                height: 4.125in;
+                position: relative;
+                margin: 0;
+                padding: 0;
+                background: white;
+            }
+            
+            .return-address {
+                position: absolute;
+                top: 0.5in;
+                left: 0.5in;
+                font-size: 12pt;
+                line-height: 1.2;
+                white-space: pre-line;
+            }
+            
+            .destination-address {
+                position: absolute;
+                top: 1.8in;
+                left: 4in;
+                font-size: 16pt;
+                line-height: 1.3;
+                white-space: pre-line;
+                font-weight: normal;
+            }
+        }
+        
+        /* Hide envelope on screen */
+        .envelope {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📮 Envelope Printer - #10 Envelopes</h1>
+        
+        <div class="input-section">
+            <label for="returnAddress">Return Address:</label>
+            <textarea id="returnAddress" placeholder="Your Name&#10;Your Street Address&#10;City, State ZIP"></textarea>
+        </div>
+        
+        <div class="input-section">
+            <label for="destinationAddress">Destination Address:</label>
+            <textarea id="destinationAddress" placeholder="Recipient Name&#10;Street Address&#10;City, State ZIP"></textarea>
+        </div>
+        
+        <button class="print-button" onclick="printEnvelope()">🖨️ Print Envelope</button>
+        
+        <div class="preview">
+            <h3>Preview:</h3>
+            <p>Fill in both addresses above, then click "Print Envelope" to print on a #10 envelope.</p>
+            <p><strong>Instructions:</strong></p>
+            <ul>
+                <li>Load a #10 envelope (4.125" × 9.5") into your printer</li>
+                <li>Make sure the envelope is oriented correctly for your printer</li>
+                <li>The return address will print in the upper left corner</li>
+                <li>The destination address will print in the center-right area</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Hidden envelope layout for printing -->
+    <div class="envelope">
+        <div class="return-address" id="printReturnAddress"></div>
+        <div class="destination-address" id="printDestinationAddress"></div>
+    </div>
+    
+    <script>
+        function printEnvelope() {
+            const returnAddr = document.getElementById('returnAddress').value.trim();
+            const destAddr = document.getElementById('destinationAddress').value.trim();
+            
+            if (!returnAddr || !destAddr) {
+                alert('Please fill in both the return address and destination address before printing.');
+                return;
+            }
+            
+            // Update the hidden print elements
+            document.getElementById('printReturnAddress').textContent = returnAddr;
+            document.getElementById('printDestinationAddress').textContent = destAddr;
+            
+            // Print the page
+            window.print();
+        }
+        
+        // Update preview when addresses change
+        function updatePreview() {
+            const returnAddr = document.getElementById('returnAddress').value;
+            const destAddr = document.getElementById('destinationAddress').value;
+            
+            if (returnAddr || destAddr) {
+                const preview = document.querySelector('.preview');
+                preview.innerHTML = `
+                    <h3>Preview:</h3>
+                    <div style="border: 1px solid #ccc; padding: 15px; background: white; font-family: monospace; position: relative; height: 150px;">
+                        <div style="position: absolute; top: 10px; left: 10px; font-size: 10px; line-height: 1.2; white-space: pre-line;">${returnAddr}</div>
+                        <div style="position: absolute; top: 60px; left: 200px; font-size: 12px; line-height: 1.3; white-space: pre-line; font-weight: bold;">${destAddr}</div>
+                    </div>
+                    <p><em>This is a rough preview. Actual print positioning may vary by printer.</em></p>
+                `;
+            }
+        }
+        
+        // Add event listeners for live preview
+        document.getElementById('returnAddress').addEventListener('input', updatePreview);
+        document.getElementById('destinationAddress').addEventListener('input', updatePreview);
+    </script>
+</body>
+</html>
