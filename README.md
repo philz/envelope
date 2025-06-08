@@ -1,0 +1,1 @@
+one shot with: "Make me a static, single HTML page web site that helps me print number 10 envelopes. It should have two inputs: return address and destination address, and, when print is clicked, produce the appropriate thing. Make both addresses large, with the To address larger." and sketch
